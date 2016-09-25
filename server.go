@@ -2,6 +2,8 @@ package socketio
 
 import (
 	"github.com/googollee/go-engine.io"
+	"io"
+	"log"
 	"net/http"
 	"time"
 )
@@ -100,7 +102,10 @@ func (s *Server) loop() {
 		}
 		s := newSocket(conn, s.baseHandler)
 		go func(s *socket) {
-			s.loop()
+			err := s.loop()
+			if err != nil && err != io.EOF {
+				log.Print(err)
+			}
 		}(s)
 	}
 }
